@@ -2,7 +2,6 @@
   "app": "python3 app.py",
   "context":{
     "bda_runtime_endpoint":"",
-    "bda_endpoint":"",
     "blueprint_name":"claims-review-cms-1500",
     "claims_submission_bucket_name": "claims-submission",
     "claims_review_bucket_name": "claims-review",

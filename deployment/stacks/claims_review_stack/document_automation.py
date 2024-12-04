@@ -93,7 +93,7 @@ class DocumentAutomation(Construct):
             timeout=Duration.seconds(300),
             layers=[layer],
             environment={
-                'ENDPOINT':bda_endpoint,
+                 **({'ENDPOINT': bda_endpoint} if bda_endpoint is not None else {}),
                 'BLUEPRINT_NAME':blueprint_name
             }
         )
@@ -118,7 +118,7 @@ class DocumentAutomation(Construct):
 
         return blueprint_creation_custom_resource
 
-    def create_claims_submission_bucket(self):
+    def claims_submission_bucket(self):
         claims_submission_bucket_name = self.node.try_get_context("claims_submission_bucket_name")
         bucket = s3.Bucket(self,"claims-submission-bucket",
             #bucket_name=f"{claims_submission_bucket_name}-{str(uuid.uuid4())}",
