@@ -2,6 +2,7 @@
   "app": "python3 app.py",
   "context":{
     "blueprint_name":"cms-1500",
+    "database_name":"claimsdatabase",
     "claims_submission_bucket_name": "claims-submission",
     "claims_review_bucket_name": "claims-review",
     "agent":{

@@ -10,6 +10,7 @@ database_name = os.environ['DATABASE_NAME']
 create_schema_sql_file = os.environ['CREATE_SCHEMA_FILE']
 delete_schema_sql_file = os.environ['DELETE_SCHEMA_FILE']
 update_schema_sql_file = os.environ.get('UPDATE_SCHEMA_FILE',None)
+initial_data_sql_file = os.environ.get('INITIAL_DATA_FILE', None)
 
 def handler(event, context):
     
@@ -18,13 +19,15 @@ def handler(event, context):
     match request_type:
         case 'Create':
             execute(create_schema_sql_file)
+            if initial_data_sql_file:
+                execute(initial_data_sql_file)
         case 'Update':
             if update_schema_sql_file:
                 execute(update_schema_sql_file)
         case 'Delete':
             execute(delete_schema_sql_file)
         case _:
-            raise Exception(f"Invalid request type: {request_type}")
+          raise ValueError(f"Invalid request type: {request_type}")
     
 
     return {
@@ -45,6 +48,8 @@ def execute(sql_file_path:str):
     
     for statement in statements:
         if statement.strip():
+            # Execute each statement
+            print(f"Executing statement: {statement}")
             execute_statement(cluster_arn, secret_arn, database_name, statement)
 
 def parse_s3_url(s3_url):

@@ -115,7 +115,7 @@ class ClaimsCLI:
         response = self.cf_client.describe_stacks(StackName=self.stack_name)
         output = None
         try:
-            output = next((item["OutputValue"] for item in response['Stacks'][0]['Outputs'] if item['ExportName']==export_name), None)
+            output = next((item["OutputValue"] for item in response['Stacks'][0]['Outputs'] if item.get('ExportName')==export_name), None)
         except:
             raise ValueError(f"Output with Export Name '{export_name}' not found in stack")
         return output
