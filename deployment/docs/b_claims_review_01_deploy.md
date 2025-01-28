@@ -266,9 +266,9 @@ guidance-for-multimodal-data-processing-using-amazon-bedrock-data-automation/
 │   │   │   │   ├── sample2_cms-1500-P.pdf
 │   │   │   │   └── sample3_cms-1500-P.pdf
 │   │   │   └── eoc/
-│   │   │       ├── Evidence_of_Coverage_-_FakeHealth_Plus.pdf
-│   │   │       ├── Evidence_of_Coverage_-_FakeHealth_Premium.pdf
-│   │   │       └── Evidence_of_Coverage_-_FakeHealth_Standard.pdf
+│   │   │       ├── Evidence_of_Coverage_-_AnyHealth_Plus.pdf
+│   │   │       ├── Evidence_of_Coverage_-_AnyHealth_Premium.pdf
+│   │   │       └── Evidence_of_Coverage_-_AnyHealth_Standard.pdf
 ├── claims-cli.bat
 ├── claims-cli.sh
 ├── deployment/

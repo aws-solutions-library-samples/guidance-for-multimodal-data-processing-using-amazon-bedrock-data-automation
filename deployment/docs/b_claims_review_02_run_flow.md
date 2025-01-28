@@ -22,9 +22,9 @@ More details - [Sync your data with your Amazon Bedrock knowledge base][Sync_you
 
 Run the following commands to add each of the EoC documents to S3 and start the ingestion process
 ```
- ./claims-cli.sh upload-eoc-document --file assets/data/claims_review/eoc/Evidence_of_Coverage_-_FakeHealth_Standard.pdf 
- ./claims-cli.sh upload-eoc-document --file assets/data/claims_review/eoc/Evidence_of_Coverage_-_FakeHealth_Plus.pdf 
- ./claims-cli.sh upload-eoc-document --file assets/data/claims_review/eoc/Evidence_of_Coverage_-_FakeHealth_Premium.pdf 
+ ./claims-cli.sh upload-eoc-document --file assets/data/claims_review/eoc/Evidence_of_Coverage_-_AnyHealth_Standard.pdf 
+ ./claims-cli.sh upload-eoc-document --file assets/data/claims_review/eoc/Evidence_of_Coverage_-_AnyHealth_Plus.pdf 
+ ./claims-cli.sh upload-eoc-document --file assets/data/claims_review/eoc/Evidence_of_Coverage_-_AnyHealth_Premium.pdf 
 ```
 
 The output shows the Ingestion process starting and completing.
