@@ -10,6 +10,7 @@ import dateutil.parser
 import json
 import botocore
 from botocore.exceptions import CredentialRetrievalError, NoRegionError
+# from typing import Optional       if using python version < 3.10
 class ClaimsCLI:
     def __init__(self):
         try :
@@ -80,6 +81,8 @@ class ClaimsCLI:
         )
         return response['ingestionJob']['status']
 
+    
+    # def wait_for_start(self,bucket:str, key:str,timestamp, max_attempts=10, delay=5)-> Optional[str]:  if using python version < 3.10
     def wait_for_start(self,bucket:str, key:str,timestamp, max_attempts=10, delay=5)-> None | str:
         attempts = 0
         while attempts < max_attempts:
