@@ -290,18 +290,18 @@ def create_claim_service(event):
     response = {
         "claimId": claim_id,
         "claim_description": "Not Implemented"}
-    # services_text = get_request_property(event,"services")
-    # services = json.loads(services_text)
-    # print(services)
-    # for service in services: # type: ignore
-    #     parameters = [
-    #         create_param("date_of_service", get_request_property(event,"date_of_service")),
-    #         create_param("place_of_service", get_request_property(event,"place_of_service")),
-    #         create_param("type_of_service", get_request_property(event,"type_of_service")),
-    #         create_param("procedure_code", get_request_property(event,"procedure_code")),
-    #         create_param("amount", get_request_property(event,"charge_amount"))
-    #     ]
-    #     result = run_command(sql_statement=CREATE_SERVICE_QUERY, parameters=parameters)
+    services_text = get_request_property(event,"services")
+    services = json.loads(services_text)
+    print(services)
+    for service in services: # type: ignore
+        parameters = [
+            create_param("date_of_service", get_request_property(event,"date_of_service")),
+            create_param("place_of_service", get_request_property(event,"place_of_service")),
+            create_param("type_of_service", get_request_property(event,"type_of_service")),
+            create_param("procedure_code", get_request_property(event,"procedure_code")),
+            create_param("amount", get_request_property(event,"charge_amount"))
+        ]
+        result = run_command(sql_statement=CREATE_SERVICE_QUERY, parameters=parameters)
 
     return response
 
