@@ -106,8 +106,7 @@ class ClaimsReviewAgentStack(Stack):
             }
         )
         return claims_review_agent_actions_function
-        
-    
+
     def create_bedrock_agent_resource_role(self,
                     claims_review_agent_resource_role_name: str,
                     knowledge_bases: list[bedrock.CfnKnowledgeBase],
@@ -115,49 +114,82 @@ class ClaimsReviewAgentStack(Stack):
                     inference_profile_id=None,
                     model_arns=None) -> iam.Role:
         
-        #Create a resource role for our Claims Review Bedrock Agent
         claims_review_agent_resource_role = iam.Role(self, "claims_review_agent_resource_role",
             description="Agent Resource Role for the Claims Review Bedrock Agent",
             role_name=claims_review_agent_resource_role_name,
-            assumed_by=iam.ServicePrincipal("bedrock.amazonaws.com", conditions={"StringEquals": {"aws:SourceAccount": self.account}})
+            assumed_by=iam.ServicePrincipal("bedrock.amazonaws.com", 
+                conditions={
+                    "StringEquals": {
+                        "aws:SourceAccount": self.account
+                    }
+                })
         )
 
-        resources = []
-        if(foundation_model_id):
-            resources.append(f"arn:aws:bedrock:{self.region}::foundation-model/{foundation_model_id}")
-        if(model_arns):
-            resources.append(model_arns)
-
-        #add policy to allow model access
-        claims_review_agent_resource_role.add_to_policy(
-            iam.PolicyStatement(
-                actions=[
-                    "bedrock:InvokeModel*",
-                    "bedrock:GetFoundationModel"
-                ],
-                resources=resources
-            )
-        )
-        if(inference_profile_id):
+        # Add foundation model permissions
+        if foundation_model_id:
             claims_review_agent_resource_role.add_to_policy(
                 iam.PolicyStatement(
+                    effect=iam.Effect.ALLOW,
                     actions=[
-                        "bedrock:InvokeModel*",
-                        "bedrock:GetInferenceProfile"
+                        "bedrock:InvokeModel",
+                        "bedrock:GetFoundationModel"
                     ],
-                    resources=[f"arn:aws:bedrock:{self.region}:{self.account}:inference-profile/{inference_profile_id}"]
+                    resources=[
+                        f"arn:aws:bedrock:{self.region}::foundation-model/{foundation_model_id}"
+                    ]
                 )
             )
 
-        claims_review_agent_resource_role.add_to_policy(
-            iam.PolicyStatement(
-                actions=[
-                    "bedrock:Retrieve"
-                ],
-                resources= [knowledgebase.attr_knowledge_base_arn for knowledgebase in knowledge_bases]
+        # Add model ARNs permissions if provided
+        if model_arns:
+            if isinstance(model_arns, str):
+                model_arns = [model_arns]
+            claims_review_agent_resource_role.add_to_policy(
+                iam.PolicyStatement(
+                    effect=iam.Effect.ALLOW,
+                    actions=[
+                        "bedrock:InvokeModel"
+                    ],
+                    resources=model_arns
+                )
             )
-        )
+
+        # Add inference profile permissions
+        if inference_profile_id:
+            claims_review_agent_resource_role.add_to_policy(
+                iam.PolicyStatement(
+                    effect=iam.Effect.ALLOW,
+                    actions=[
+                        "bedrock:InvokeModel",
+                        "bedrock:GetInferenceProfile"
+                    ],
+                    resources=[
+                        f"arn:aws:bedrock:{self.region}:{self.account}:inference-profile/{inference_profile_id}"
+                    ]
+                )
+            )
+
+        # Add knowledge base permissions
+        if knowledge_bases:
+            kb_resources = []
+            for kb in knowledge_bases:
+                if hasattr(kb, 'attr_knowledge_base_arn'):
+                    kb_resources.append(kb.attr_knowledge_base_arn)
+            
+            if kb_resources:
+                claims_review_agent_resource_role.add_to_policy(
+                    iam.PolicyStatement(
+                        effect=iam.Effect.ALLOW,
+                        actions=[
+                            "bedrock:Retrieve"
+                        ],
+                        resources=kb_resources
+                    )
+                )
+
+
         return claims_review_agent_resource_role
+
     def get_claims_review_action_group_schema(self):
                 # Construct the path to the schema file
         current_dir = os.path.dirname(os.path.abspath(__file__))
