@@ -49,7 +49,7 @@ To process our Lending Package, we need one more blueprint. BDA does not have a 
 <img src="../../assets/screenshots/AWS_Console_Screenshot_5_-_create_blueprint.png" width="800" />
 
 
-* Upload the sample named “homeowner insurance application sample.pdf”
+* Select the sample named “homeowner insurance application sample.pdf” for upload. Click the "Upload File" button.
 * For an initial prompt, enter “This is an homeowner insurance form. Please extract all the keys and values from the form.”
 
 <img src="../../assets/screenshots/AWS_Console_Screenshot_6_-_extraction_start.png" width="800" />
@@ -76,7 +76,7 @@ Now that we have our project with all the needed blueprints (six), we can procee
 
 
 * Navigate to BDA, then “Projects”. Select the project named “my-lending-project”. 
-* On the “Custom Output” tab, select one of the six blueprints. I’ll choose “homeowners-insurance-application”. 
+* Click the "Test" button on the top right. 
 * Upload the sample named “lending_package.pdf”. This package has six different documents in one file. 
     *  An Earning Statement (Pay Stub)
     *  A Check
@@ -86,7 +86,8 @@ Now that we have our project with all the needed blueprints (six), we can procee
     *  A Homeowners Insurance Application. Note, this is a different application form, one that BDA has not seen before. 
 * Click “Generate Results”. BDA will analyze each page, and find the Homeowners Insurance document, and apply the “homeowners-insurance-application” blueprint. 
 
-
+Below we see a sample result of that.
+<img src="../../assets/screenshots/AWS_Console_home_owner_insurance_result.png" width="800" />
 
 The Document Splitting is disabled by default, lets activate it by running the following code:
 
