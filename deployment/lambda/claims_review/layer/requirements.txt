@@ -2,4 +2,4 @@ pytz
 requests
 opensearch-py
 requests_aws4auth
-boto3>=1.35.76
+boto3>=1.37.4

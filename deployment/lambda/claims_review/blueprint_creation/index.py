@@ -15,8 +15,8 @@ def update_blueprint(physical_resource_id:str, resourceProperties):
 
     response = bda_client.update_blueprint(
         blueprintArn=physical_resource_id,
-        schema=resourceProperties["blueprintSchema"],
-        blueprintStage=load_blueprint_schema(resourceProperties)
+        schema=load_blueprint_schema(resourceProperties),
+        blueprintStage=resourceProperties["blueprintStage"],
     )
     return  response["blueprint"]
 
@@ -36,6 +36,7 @@ def on_event(event, context):
     It receives an event and a context object, and based on the request type
     in the event, it calls the appropriate function to handle the request.
     """
+    print(event)
     request_type = event['RequestType']
     if request_type == 'Create': return on_create(event)
     if request_type == 'Update': return on_update(event)

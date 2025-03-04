@@ -2,8 +2,18 @@ import boto3
 import json
 import os
 
+
+# Get the AWS Session
+session = boto3.Session()
+
 # Create a Bedrock client
 bda_client = boto3.client("bedrock-data-automation-runtime") 
+# Get Region
+region_name = session.region_name
+
+# Get Account ID
+sts_client = session.client('sts')
+account_id = sts_client.get_caller_identity()['Account']
 
 def invoke_insight_generation_async(
         claim_reference_id, 
@@ -29,7 +39,7 @@ def invoke_insight_generation_async(
 
     # Define the data insight configuration
     dataAutomationConfiguration = {
-        "dataAutomationArn": data_project_arn
+        "dataAutomationProjectArn": data_project_arn
     } if data_project_arn is not None else None
 
     blueprints = [
@@ -57,6 +67,7 @@ def invoke_insight_generation_async(
                 'blueprints': blueprints
             } if blueprints is not None else {}
         ),
+        dataAutomationProfileArn=f'arn:aws:bedrock:{region_name}:{account_id}:data-automation-profile/us.data-automation-v1',      
         outputConfiguration=outputConfiguration,
         notificationConfiguration=notificationConfiguration
     )

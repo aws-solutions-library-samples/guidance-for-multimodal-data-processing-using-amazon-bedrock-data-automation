@@ -16,6 +16,18 @@ bda_client_runtime = boto3.client("bedrock-data-automation-runtime",
                                 **({'endpoint_url': ENDPOINT_RUNTIME} if ENDPOINT_RUNTIME is not None else {}),
                                 verify=True)
 
+# Get the AWS Session
+session = boto3.Session()
+
+# Create a Bedrock client
+bda_client = boto3.client("bedrock-data-automation-runtime") 
+# Get Region
+region_name = session.region_name
+
+# Get Account ID
+sts_client = session.client('sts')
+account_id = sts_client.get_caller_identity()['Account']
+
 # allows to call the bda api directly, until the SDK gets released, then we can replace it with boto3 methods
 def bda_sdk(bda_client_runtime, url_path ="data-automation-projects/", method ="POST", service ="bedrock", payload={}, control_plane = True):
     host = bda_client_runtime.meta.endpoint_url.replace("https://", "")
@@ -66,11 +78,12 @@ def invoke_insight_generation_async(
             "s3Uri": output_s3_uri
         },
         "dataAutomationConfiguration": {
-            "dataAutomationArn": data_project_arn,
+            "dataAutomationProjectArn": data_project_arn,
         },
         "notificationConfiguration": {
-        "eventBridgeConfiguration": {"eventBridgeEnabled": True},
-        }
+        "eventBridgeConfiguration": {"eventBridgeEnabled": True}
+        },
+        "dataAutomationProfileArn": f'arn:aws:bedrock:{region_name}:{account_id}:data-automation-profile/us.data-automation-v1',
     # "blueprints" : [
         # {"blueprintArn": blueprint_arn}
         # ]

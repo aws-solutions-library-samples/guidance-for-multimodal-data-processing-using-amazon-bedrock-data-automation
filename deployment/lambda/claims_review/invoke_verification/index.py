@@ -29,9 +29,9 @@ class InsightJobFailed(Exception):
 def generate_unique_id():
     return str(uuid.uuid4())
 
-def invoke_bedrock_agent(s3_uri:str):
+def invoke_bedrock_agent(claim_reference_id:str, s3_uri:str):
     try:
-        session_id = generate_unique_id()
+        session_id = claim_reference_id
         agent_output = agent_runtime_wrapper.invoke_agent(
             agent_id=CLAIMS_REVIEW_AGENT_ID,
             agent_alias_id=CLAIMS_REVIEW_AGENT_ALIAS_ID,
@@ -48,14 +48,14 @@ def invoke_bedrock_agent(s3_uri:str):
 def lambda_handler(event, context):
     # Log the event for debugging
     print(f"Received event: {event}")
+    claim_reference_id = extract_claim_reference_id(event)
     processed_automation_output_uri = extract_document_automation_output(event,context)
     # Invoke Bedrock agent
-    agent_response = invoke_bedrock_agent(processed_automation_output_uri)
+    agent_response = invoke_bedrock_agent(claim_reference_id, processed_automation_output_uri)
 
     # Log the response for debugging
     print(f"Bedrock agent response: {agent_response}")
     output_s3_location_s3_bucket = event["detail"]["output_s3_location"]["s3_bucket"]
-    claim_reference_id = extract_claim_reference_id(event)
     
     extracted_output = s3.put_object(
         Bucket=output_s3_location_s3_bucket,
@@ -76,6 +76,10 @@ def extract_claim_reference_id(event):
 
 def extract_document_automation_output(event, context):
 
+    #if the detail.job_status in event is not SUCCESS then throw error
+    if event["detail"]["job_status"] != "SUCCESS":
+        raise InsightJobFailed(f"Couldn't get insights from claim form for claim ref: {claim_reference_id}")
+
     input_s3_object_key = event["detail"]["input_s3_object"]["name"]
 
     claim_reference_id = extract_claim_reference_id(event)
@@ -83,10 +87,6 @@ def extract_document_automation_output(event, context):
     output_s3_location_s3_bucket = output_s3_location["s3_bucket"]
     output_s3_location_key = output_s3_location["name"].rsplit("/",1)[0]
     assetId = output_s3_location["name"].rsplit("/",1)[1]
-
-    #if the detail.job_status in event is not SUCCESS then throw error
-    if event["detail"]["job_status"] != "SUCCESS":
-        raise InsightJobFailed(f"Couldn't get insights from claim form for claim ref: {claim_reference_id}")
 
     #read s3 object job_metadata.json from the  output_s3_location_uri
     job_metadata = json.loads(s3.get_object(Bucket=output_s3_location_s3_bucket, 

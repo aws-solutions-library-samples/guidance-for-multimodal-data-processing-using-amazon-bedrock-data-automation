@@ -4,8 +4,8 @@ aws-cdk.aws-lambda-python-alpha==2.166.0-alpha.0
 constructs>=10.0.0
 
 # AWS SDK and utilities
-boto3>=1.35.76
-botocore>=1.35.76
+boto3>=1.37.4
+botocore>=1.37.4
 
 # Development dependencies
 pytest>=7.0.0

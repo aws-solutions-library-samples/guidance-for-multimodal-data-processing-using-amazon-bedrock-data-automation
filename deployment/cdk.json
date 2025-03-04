@@ -5,6 +5,7 @@
     "database_name":"claimsdatabase",
     "claims_submission_bucket_name": "claims-submission",
     "claims_review_bucket_name": "claims-review",
+    "data_automation_profile_regions": ["us-east-1","us-east-2","us-west-1","us-west-2"],
     "inference_profile_id": "us.amazon.nova-pro-v1:0",
     "agent":{
         "claims_review_agent_resource_role_name": "claims_review_agent_resource_role"
