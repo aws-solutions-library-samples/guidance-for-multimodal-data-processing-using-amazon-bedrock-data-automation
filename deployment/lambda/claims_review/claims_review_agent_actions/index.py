@@ -115,7 +115,7 @@ def get_request_property(event, property_name, defaultValue=None):
     properties = application_json["properties"]
     property = [p for p in properties if p["name"]==property_name]
     if not property:
-        if not defaultValue:
+        if defaultValue is None:
             raise ParameterNotFoundError(f"Missing parameter: {property_name}")
         else:
             return defaultValue
