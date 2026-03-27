@@ -1,0 +1,3 @@
+@echo off
+echo Starting Claims Processing Dashboard...
+streamlit run streamlit_app.py --server.port 8501 --server.address localhost

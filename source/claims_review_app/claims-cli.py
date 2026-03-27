@@ -147,7 +147,7 @@ class ClaimsCLI:
     def submit_claim(self, claim_form_path, bucket_name):
         if not os.path.exists(claim_form_path):
             print(f"Error: File '{claim_form_path}' does not exist.")
-            return
+            return None
 
         try:
             file_name = os.path.basename(claim_form_path)
@@ -155,8 +155,10 @@ class ClaimsCLI:
             key = f"{claim_reference_id}/{claim_form_path.split('/')[-1]}"
             self.s3_client.upload_file(claim_form_path, bucket_name, key)
             print(f"\n\033[1mClaim form submitted. Claim reference Id: {claim_reference_id}\033[0m\n")
+            return claim_reference_id
         except Exception as e:
             print(f"Error uploading file: {str(e)}")
+            return None
 
     def print_job_status(self, ingestion_job_id):
             print(f"\n\033[1m Ingestion Job with Id {ingestion_job_id} {self.get_ingestion_job_status(ingestion_job_id)}\033[0m\n")

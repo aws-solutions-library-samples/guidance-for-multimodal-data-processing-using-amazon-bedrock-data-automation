@@ -69,6 +69,13 @@ By using this dataset and guidance, you acknowledge that you have read, understo
 
 <img src="assets/architectures/b_claims_review_architecture.png" width="800" />
 
+- Sample outputs with Streamlit UI
+Claims Processed successfully:
+<img src="assets/output/Claims_processed.png" width="800" />
+
+Further review required:
+<img src="assets/output/Review_required.png" width="800" />
+
 ## Getting Started
 
 ### Prerequisites
